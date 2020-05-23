@@ -24,6 +24,7 @@ import {
   CalendarEvent,
 } from 'calendar-utils';
 import { DragEndEvent, DragMoveEvent } from 'angular-draggable-droppable';
+import { CalendarService } from '../Interface/calendar.service';
 
 
 export interface User {
@@ -69,6 +70,7 @@ export class DayViewSchedulerCalendarUtils extends CalendarUtils {
           offset: columnIndex,
           span: 1,
         });
+        console.log('view.allDayEventRows::::', JSON.stringify(view.allDayEventRows));
       });
     });
 
@@ -86,17 +88,18 @@ export class DayViewSchedulerCalendarUtils extends CalendarUtils {
 })
 export class DayViewSchedularComponent extends CalendarWeekViewComponent
 implements OnChanges {
-  
+  event:Event[];
   @Input() users: User[] = [];
 
   @Output() userChanged = new EventEmitter();
 
   view: DayViewScheduler;
+  row:any;
   daysInWeek = 1;
 
   constructor(protected cdr: ChangeDetectorRef,
     protected utils: DayViewSchedulerCalendarUtils,
-    @Inject(LOCALE_ID) locale: string,
+    @Inject(LOCALE_ID) locale: string,public calendarService:CalendarService,
     protected dateAdapter: DateAdapter) { super(cdr, utils, locale, dateAdapter);}
 
   // ngOnInit(): void {
@@ -115,6 +118,7 @@ implements OnChanges {
   }
 
   dragMove(dayEvent: WeekViewTimeEvent, dragEvent: DragMoveEvent) {
+    // console.log("event time:::",dayEvent.event);
     if (this.snapDraggedEvents) {
       const newUser = this.getDraggedUserColumn(dayEvent, dragEvent.x);
       const newEventTimes = this.getDragMovedEventTimes(
@@ -165,6 +169,14 @@ implements OnChanges {
   }
 
   protected getWeekView(events: CalendarEvent[]) {
+    // console.log('start hour:::',this.dayStartHour);
+    // console.log('start Minute:::',this.dayStartMinute);
+    // console.log('End hour:::',this.dayEndHour);
+    // console.log('End Minute:::',this.dayEndMinute);
+    // console.log('hour Sagment:::',this.hourSegments);
+    // console.log('precision:::',this.precision);
+    // console.log('Users',this.users);
+
     return this.utils.getWeekView({
       events,
       users: this.users,

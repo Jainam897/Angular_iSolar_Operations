@@ -6,30 +6,16 @@ import {
 import { addHours, startOfDay } from 'date-fns';
 import { User } from './day-view-schedular/day-view-schedular.component';
 import { colors } from './colors';
+import { CalendarService } from './Interface/calendar.service';
 
-
-const users: User[] = [
-
-  {
-    id: 0,
-    name: 'Rahul Shah',
-    color: colors.yellow
-  },
-
-  {
-    id: 1,
-    name: 'Prkruti Patel',
-    color: colors.blue
-  },
-
-  {
-    id: 2,
-    name: 'Hinaxi Patel',
-    color: colors.red
-  },
-];
-
-
+// const users: User[] = [
+  // {
+  //   id: 2,
+  //   name: 'pratik patel',
+  //   color: colors.red
+  // },
+  
+// ];
 @Component({
   selector: 'vex-calendar',
   templateUrl: './calendar.component.html',
@@ -39,126 +25,61 @@ const users: User[] = [
 })
 export class CalendarComponent implements OnInit {
   viewDate = new Date();
-  users = users;
+  users = [];
+  rowData = [];
 
-  constructor() { }
+  constructor(private calendarService: CalendarService) {
+    this.calendarService.userList().subscribe((data) => {
+      this.users = data;
+      console.log('this.users:::::', this.users);
+    });
+
+  }
   ngOnInit(): void {
+
+    this.rowData = [];
+    this.calendarService.eventList().subscribe((data) => {
+      // console.log("Data::::::", data);
+      if (data) {
+        data.forEach((response, ) => {
+          // console.log('response', response);
+          // console.log('response.row', response.row);
+          response.row.forEach((rowRes) => {
+            // console.log('rowRes:::', rowRes);
+            const tempData = {
+              title: rowRes.event.title,
+              color: rowRes.event.color,
+              start: new Date(rowRes.event.start),
+              meta: rowRes.event.meta,
+              resizable: {
+                beforeStart: rowRes.startsBeforeWeek,
+                afterEnd: rowRes.endsAfterWeek
+              },
+              draggable: rowRes.event.draggable,
+            }
+            // console.log('tempData:::::::::', tempData);
+            this.events.push(tempData);
+          });
+        });
+      }
+      console.log('this.events::::', this.events);
+    })
   }
 
-  events: CalendarEvent[] = [
-    {
-      title: 'An event',
-      color: users[0].color,
-      start: addHours(startOfDay(new Date()), 5),
-      meta: {
-        user: users[0],
-      },
-      resizable: {
-        beforeStart: true,
-        afterEnd: true,
-      },
-      draggable: true,
-    },
-    {
-      title: 'Another event',
-      color: users[1].color,
-      start: addHours(startOfDay(new Date()), 2),
-      meta: {
-        user: users[1],
-      },
-      resizable: {
-        beforeStart: true,
-        afterEnd: true,
-      },
-      draggable: true,
-    },
+  events: CalendarEvent[] = [];
 
-    {
-      title: 'An event',
-      color: users[2].color,
-      start: addHours(startOfDay(new Date()), 9),
-      meta: {
-        user: users[2],
-      },
-      resizable: {
-        beforeStart: true,
-        afterEnd: true,
-      },
-      draggable: true,
-    },
-
-    {
-      title: 'Another event',
-      color: users[2].color,
-      start: addHours(startOfDay(new Date()), 16),
-      meta: {
-        user: users[2],
-      },
-      resizable: {
-        beforeStart: true,
-        afterEnd: true,
-      },
-      draggable: true,
-    },
-
- {
-      title: 'Another event',
-      color: users[0].color,
-      start: addHours(startOfDay(new Date()), 2),
-      meta: {
-        user: users[0],
-      },
-      resizable: {
-        beforeStart: true,
-        afterEnd: true,
-      },
-      draggable: true,
-    },
-
-    {
-      title: 'A 3rd event',
-      color: users[0].color,
-      start: addHours(startOfDay(new Date()), 7),
-      meta: {
-        user: users[0],
-      },
-      resizable: {
-        beforeStart: true,
-        afterEnd: true,
-      },
-      draggable: true,
-    },
-    {
-      title: 'An all day event',
-      color: users[0].color,
-      start: new Date(),
-      meta: {
-        user: users[0],
-      },
-      draggable: true,
-      allDay: true,
-    },
-    {
-      title: 'Another all day event',
-      color: users[1].color,
-      start: new Date(),
-      meta: {
-        user: users[1],
-      },
-      draggable: true,
-      allDay: true,
-    },
-    {
-      title: 'A 3rd all day event',
-      color: users[0].color,
-      start: new Date(),
-      meta: {
-        user: users[0],
-      },
-      draggable: true,
-      allDay: true,
-    },
-  ];
+  // events: CalendarEvent[] = [
+  //     {
+  //       title: 'A 3rd all day event',
+  //       color: users[0].color,
+  //       start: new Date(),
+  //       meta: {
+  //         user: users[0],
+  //       },
+  //       draggable: true,
+  //       allDay: true,
+  //     },
+  // ];
 
   eventTimesChanged({
     event,
