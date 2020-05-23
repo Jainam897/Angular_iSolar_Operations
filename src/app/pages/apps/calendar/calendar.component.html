@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="btn-group">
+      
+      <div class="example-button-row">
+        <button mat-raised-button color="primary" mwlCalendarPreviousView [view]="'day'"
+          [(viewDate)]="viewDate">Previous</button>
+      </div>
+
+      <div class="example-button-row">
+        <button mat-stroked-button color="primary" class="btn btn-outline-secondary" mwlCalendarToday
+          [(viewDate)]="viewDate">
+          Today</button>
+      </div>
+
+      <div class="example-button-row">
+        <button mat-raised-button color="primary" mwlCalendarNextView [view]="'day'" [(viewDate)]="viewDate">
+          Next
+        </button>
+
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 text-right">
+    <h3>{{ viewDate | calendarDate:('dayViewTitle') }}</h3>
+  </div>
+</div>
+<br />
+
+<vex-day-view-schedular [viewDate]="viewDate" [events]="events" [users]="users"
+  (eventTimesChanged)="eventTimesChanged($event)" (userChanged)="userChanged($event)">
+</vex-day-view-schedular>

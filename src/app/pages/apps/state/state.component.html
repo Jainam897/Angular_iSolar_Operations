@@ -1,0 +1,102 @@
+<vex-page-layout>
+
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
+      <div>
+        <div>
+          <h1 class="title mt-0 mb-1">States List</h1>
+          <vex-breadcrumbs [crumbs]="['Apps', 'States Records']"></vex-breadcrumbs>
+        </div>
+  
+      </div>
+    </vex-page-layout-header>
+  
+    <vex-page-layout-content class="-mt-6">
+  
+      <div style="margin-bottom: 16px !important" class="card overflow-auto -mt-16">
+        <div class="bg-app-bar px-6 h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+  
+  
+          <div class="bg-card rounded-full border px-4" fxFlex="400px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
+            fxLayoutAlign="start center">
+            <ic-icon [icIcon]="icSearch" size="20px"></ic-icon>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium"
+              class="px-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..." type="search">
+          </div>
+  
+          <span fxFlex></span>
+  
+          <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
+            <mat-icon [icIcon]="icSearch"></mat-icon>
+          </button>
+  
+          <button (click)="openDialog()" class="ml-4" color="primary" fxFlex="none" mat-mini-fab matTooltip="Add Country"
+            type="button">
+            <mat-icon [icIcon]="icAdd"></mat-icon>
+          </button>
+        </div>
+  
+        <mat-table mat-table [dataSource]="dataSource" class="mat-elevation-z8 table" matSort>
+  
+          <!-- <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
+  
+          <!-- Text Columns -->
+          <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
+            <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
+              <th style="padding: 16px" *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>
+                {{ column.label }}</th>
+              <td style="padding: 16px" *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
+                {{ row[column.property]}}</td>
+            </ng-container>
+            <ng-container *ngIf="column.type === 'button'" [matColumnDef]="column.property">
+              <th style="padding: 16px" *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>
+                {{ column.label }}</th>
+              <td *matCellDef="let row"  mat-cell>
+                <button mat-raised-button color="primary" (click)="checkStateStatus(row)"  *ngIf="row[column.property] === 0" >Active</button>
+                <button mat-raised-button color="warn" (click)="checkStateStatus(row)"  *ngIf="row[column.property] === 1" >Inactive</button>
+              </td>
+            </ng-container>
+          </ng-container>
+  
+          <!--Active-Column-->
+
+          
+  
+          <!-- Action Column   -->
+       <ng-container matColumnDef="actions">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
+            <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
+              <button [matMenuTriggerData]="{ state: row }"
+                [matMenuTriggerFor]="actionsMenu" mat-icon-button type="button">
+                <mat-icon [icIcon]="icMoreHoriz"></mat-icon>
+              </button>
+            </td>
+          </ng-container> 
+  
+          <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
+          <tr *matRowDef="let row; columns: visibleColumns;" @fadeInUp
+            class="hover:bg-hover trans-ease-out cursor-pointer" mat-row></tr>
+        </mat-table>
+  
+        <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" class="sticky left-0"></mat-paginator>
+  
+      </div>
+  
+    </vex-page-layout-content>
+  
+  </vex-page-layout>
+  
+  
+  <mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
+    <ng-template let-state="state" matMenuContent>
+      <button (click)="editStateDetails(state)" mat-menu-item>
+        <mat-icon [icIcon]="icEdit"></mat-icon>
+        <span>Modify</span>
+      </button>
+      <button (click)="deleteState(state)" mat-menu-item>
+        <mat-icon [icIcon]="icDelete"></mat-icon>
+        <span>Delete</span>
+      </button>
+    </ng-template>
+  </mat-menu>
+  

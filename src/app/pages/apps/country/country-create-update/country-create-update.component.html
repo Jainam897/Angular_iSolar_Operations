@@ -1,0 +1,44 @@
+<form (ngSubmit)="save()" [formGroup]="form">
+
+     <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title> 
+        <!-- <img *ngIf="form.get('imageSrc').value" [src]="form.get('imageSrc').value" class="avatar mr-5"> -->
+
+        <h2 *ngIf="!data" class="headline m-0" fxFlex="auto">
+            Create Country</h2>
+
+            <h2 *ngIf="data" class="headline m-0" fxFlex="auto">
+                Update Country</h2>
+
+        <!-- <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+          <mat-icon [icIcon]="icClose"></mat-icon>
+        </button>-->
+    </div>
+
+
+    <mat-dialog-content fxLayout="column">
+        <div>
+            <mat-form-field>
+                <mat-label>Country Name</mat-label>
+                <input cdkFocusInitial matInput formControlName="countryName" [value]="form.get('countryName').value | titlecase">                
+                <mat-error *ngIf="form.get('countryName').errors && form.get('countryName').dirty">
+                    <mat-error *ngIf="form.get('countryName').hasError('required')">Please Enter Country's Name</mat-error>
+                    <mat-error *ngIf="form.get('countryName').hasError('minlength')">required Minimum 3 characters</mat-error>
+                    <mat-error *ngIf="form.get('countryName').hasError('uniqueCountry')">This Country's Name Already exists</mat-error>
+                </mat-error>
+            </mat-form-field>
+
+
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close type="button">CANCEL</button>
+        <button *ngIf="!data" color="primary" mat-button type="submit" [disabled]="form.invalid">SAVE
+        </button>
+        <button  *ngIf="data" color="primary" mat-button type="submit" [disabled]="form.invalid">UPDATE
+        </button>   
+        <!-- <button *ngIf="isUpdateMode()" color="primary" mat-button type="submit" [disabled]="form.invalid">UPDATE
+              STUDENT</button> -->
+    </mat-dialog-actions>
+
+</form>
